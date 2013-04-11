@@ -20,6 +20,20 @@ require("tap").test("inorder-tree-layout", function(t) {
     t.equals(layout.root(n), root.v)
     var ptr = layout.begin(n)
     
+    function leftAncestor(x) {
+      if(x.left) {
+        return leftAncestor(x.left)
+      }
+      return x.v
+    }
+    
+    function rightAncestor(x) {
+      if(x.right) {
+        return rightAncestor(x.right)
+      }
+      return x.v
+    }
+    
     function visit(node, parent) {
       t.equals(layout.height(n, node.v), node.h)
       if(parent) {
@@ -35,6 +49,8 @@ require("tap").test("inorder-tree-layout", function(t) {
         t.equals(layout.right(n, node.v), node.right.v)
         visit(node.right, node)
       }
+      t.equals(layout.lo(n, node.v), leftAncestor(node))
+      t.equals(layout.hi(n, node.v), rightAncestor(node))
     }
     
     visit(root, null)

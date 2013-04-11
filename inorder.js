@@ -17,6 +17,16 @@ function endInorder(n) {
 }
 exports.end = endInorder
 
+function leftMostAncestor(n, x) {
+  return x + 1 - (1<<heightInorder(n, x))
+}
+exports.lo = leftMostAncestor
+
+function rightMostAncestor(n, x) {
+  return Math.min(x + (1<<heightInorder(n,x)) - 1, n-1)
+}
+exports.hi = rightMostAncestor
+
 function heightInorder(n, x) {
   return bits.countTrailingZeros(~x)
 }

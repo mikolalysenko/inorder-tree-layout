@@ -44,5 +44,11 @@ Returns the left child of `x`
 ### `layout.right(n, x)`
 Returns the right child of `x`
 
+### `layout.lo(n, x)`
+Returns the left-most ancestor of `x`
+
+### `layout.hi(n, x)`
+Returns the right-most ancestor of `x`
+
 # Credits
 (c) 2013 Mikola Lysenko. MIT License
