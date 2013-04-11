@@ -13,7 +13,7 @@ function beginInorder(n) {
 exports.begin = beginInorder
 
 function endInorder(n) {
-  return n-1
+  return n
 }
 exports.end = endInorder
 
