@@ -2,7 +2,13 @@ inorder-tree-layout
 ===================
 Operations on nodes for balanced binary trees stored in in-order layout.  These are useful if you are building data structures, like binary search trees, implicitly (ie not storing pointers to subtrees).
 
-Assumes that the tree is filled in level order, and laid out in memory via an inorder traversal.  For example:
+## Install
+
+    npm install inorder-tree-layout
+    
+## Example
+
+Suppose we have a tree with 10 elements, packed in level order.  Then the inorder labelling of this tree looks like the following picture:
 
 ```
 The tree:
@@ -15,18 +21,9 @@ The tree:
     / \  |
    0   2 4
 
-Maps to:
-
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
 
-## Install
-
-    npm install inorder-tree-layout
-    
-## Example
-
-Given the tree from the intro, let's illustrate some queries:
+Now given this tree, here is how we can compute some queries using this library:
 
 ```javascript
 var layout = require("inorder-tree-layout")
