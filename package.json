@@ -1,6 +1,6 @@
 {
   "name": "inorder-tree-layout",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Index calculations for inorder layout of balanced binary trees",
   "main": "inorder.js",
   "directories": {
@@ -10,7 +10,8 @@
     "bit-twiddle": "~0.0.1"
   },
   "devDependencies": {
-    "tap": "~0.4.1"
+    "tap": "~0.4.1",
+    "tree-layout-tester": "~0.0.1"
   },
   "scripts": {
     "test": "tap test/*.js"
