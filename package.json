@@ -1,6 +1,6 @@
 {
   "name": "inorder-tree-layout",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Index calculations for inorder layout of balanced binary trees",
   "main": "inorder.js",
   "directories": {
