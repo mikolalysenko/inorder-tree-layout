@@ -74,6 +74,8 @@ Returns the left child of `x`
 ### `layout.right(n, x)`
 Returns the right child of `x`
 
+### `layout.leaf(n, x)`
+Returns true if `x` is a leaf node.
 
 # Credits
 (c) 2013 Mikola Lysenko. MIT License

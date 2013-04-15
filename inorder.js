@@ -108,3 +108,8 @@ function rightInorder(n, x) {
   return y + f
 }
 exports.right = rightInorder
+
+function leafInorder(n, x) {
+  return heightInorder(n, x) === 0
+}
+exports.leaf = leafInorder
