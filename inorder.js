@@ -102,10 +102,8 @@ function rightInorder(n, x) {
     var h = bits.countTrailingZeros(~x)
     return x+(1<<(h-1))
   }
-  var y = x - f
-  var h = bits.countTrailingZeros(~y)
-  y += (1<<(h-1))
-  return y + f
+  var h = bits.countTrailingZeros(~(x-f))
+  return x + (1<<(h-1))
 }
 exports.right = rightInorder
 
@@ -113,3 +111,33 @@ function leafInorder(n, x) {
   return heightInorder(n, x) === 0
 }
 exports.leaf = leafInorder
+
+
+function loInorder(n, x) {
+  while(!leafInorder(n,x)) {
+    x = leftInorder(n,x)
+  }
+  return x
+}
+exports.lo = loInorder
+
+
+function hasRight(n, x) {
+  var ptree = bits.nextPow2(n+1)>>>1
+  var f     = n - ptree + 1
+  var c     = f + bits.nextPow2(f) - 1
+  if(x < c-1) {
+    return bits.countTrailingZeros(~x)
+  } else if(x === 0) {
+    return 0
+  }
+  return bits.countTrailingZeros(~(x-f))
+}
+
+function hiInorder(n, x) {
+  while(hasRight(n, x) > 0) {
+    x = rightInorder(n, x)
+  }
+  return x
+}
+exports.hi = hiInorder

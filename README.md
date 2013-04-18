@@ -77,5 +77,11 @@ Returns the right child of `x`
 ### `layout.leaf(n, x)`
 Returns true if `x` is a leaf node.
 
+### `layout.lo(n, x)`
+Returns the left most ancestor of `x` in the tree
+
+### `layout.hi(n, x)`
+Returns the right most ancestor of `x` in the tree
+
 # Credits
 (c) 2013 Mikola Lysenko. MIT License
