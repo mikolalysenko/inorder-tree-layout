@@ -5,7 +5,7 @@ var bits = require("bit-twiddle")
 function rootInorder(n) {
   var ptree = (bits.nextPow2(n+1)>>>1) - 1
   var f     = n - ptree
-  if(f >= ptree) {
+  if(bits.nextPow2(f)-1 >= ptree) {
     return ptree
   }
   return (ptree>>>1)+f
@@ -22,30 +22,24 @@ function endInorder(n) {
 }
 exports.end = endInorder
 
+
 //This is really horrible because n is not necessarily a power of 2
 // If it was, we could just do:
 //
-//    hieght = bits.countTrailingZeros(~x)
+//    height = bits.countTrailingZeros(~x)
 //
-// Instead, we need to do a more subtle case-by-case analysis of the node
-//  and its position in the tree
+// Instead, we just binary search because doing the right thing here is way too complicated.
 function heightInorder(n, x) {
-  var ptree = bits.nextPow2(n+1)>>>1
-  var f     = n - ptree + 1
-  var c     = f + bits.nextPow2(f) - 1
-  if(x < c) {
-    var h = bits.countTrailingZeros(~x)
-    if(x+1-(1<<h) > 2*f) {
-      h -= 1
-    }
-    return h
+  if(n <= 0) {
+    return 0
   }
-  x -= f
-  var h = bits.countTrailingZeros(~x)
-  if(x === (1<<h)-1) {
-    return h+1
+  var r = rootInorder(n)
+  if(x > r) {
+    return heightInorder(n-r-1, x-r-1)
+  } else if(x === r) {
+    return bits.log2(n)
   }
-  return h
+  return heightInorder(r, x)
 }
 exports.height = heightInorder
 
@@ -59,53 +53,74 @@ function nextInorder(n, x) {
 }
 exports.next = nextInorder
 
+
+//The version for n = (1<<k)-1:
+//
+//  parent = (x & ~(1<<(h+1))) + (1<<h)
+//
 function parentInorder(n, x) {
-  var ptree = bits.nextPow2(n+1)>>>1
-  var f     = n - ptree + 1
-  var c     = f + bits.nextPow2(f) - 1
-  if(x < c) {
-    var h = bits.countTrailingZeros(~x)
-    var y = (x & ~(1<<(h+1)))^(1<<h)
-    if(y >= c) {
-      var e = bits.nextPow2(c+1) - c - 1
-      y -= e
-    }
-    return y
+  if(n <= 0) {
+    return -1
   }
-  var y = x - f
-  var h = bits.countTrailingZeros(~y)
-  y = (y & ~(1<<(h+1)))^(1<<h)
-  return y + f
+  var r = rootInorder(n)
+  if(x > r) {
+    var q = parentInorder(n-r-1, x-r-1)
+    if(q < 0) {
+      return r
+    } else {
+      return q + r + 1
+    }
+  } else if(x === r) {
+    return -1
+  }
+  var q =  parentInorder(r, x)
+  if(q < 0) {
+    return r
+  }
+  return q
 }
 exports.parent = parentInorder
 
+
+//Again, we get screwed because n is not a power of two -1.  If it was, we could do:
+//
+//    left = x - (1 << (h-1) )
+//
+// Where h is the height of the node
+//
 function leftInorder(n, x) {
-  var ptree = bits.nextPow2(n+1)>>>1
-  var f     = n - ptree + 1
-  var c     = f + bits.nextPow2(f) - 1
-  if(x < c) {
-    var h = bits.countTrailingZeros(~x)
-    return x-(1<<(h-1))
-  } else if(x === c) {
-    return bits.nextPow2(f)-1
+  if(n <= 0) {
+    return 0
   }
-  var h = bits.countTrailingZeros(~(x-f))
-  return x-(1<<(h-1))
+  var r = rootInorder(n)
+  if(x > r) {
+    return leftInorder(n-r-1, x-r-1) + r + 1
+  } else if(x === r) {
+    return rootInorder(x)
+  }
+  return leftInorder(r, x)
+
 }
 exports.left = leftInorder
 
+//for power of two minus one:
+//
+//    right = x + (1<<(h-1))
+//
 function rightInorder(n, x) {
-  var ptree = bits.nextPow2(n+1)>>>1
-  var f     = n - ptree + 1
-  var c     = f + bits.nextPow2(f) - 1
-  if(x < c) {
-    var h = bits.countTrailingZeros(~x)
-    return x+(1<<(h-1))
+  if(n <= 0) {
+    return 0
   }
-  var h = bits.countTrailingZeros(~(x-f))
-  return x + (1<<(h-1))
+  var r = rootInorder(n)
+  if(x > r) {
+    return rightInorder(n-r-1, x-r-1) + r + 1
+  } else if(x === r) {
+    return rootInorder(n-r-1) + r + 1
+  }
+  return rightInorder(r, x)
 }
 exports.right = rightInorder
+
 
 function leafInorder(n, x) {
   return heightInorder(n, x) === 0
@@ -114,30 +129,29 @@ exports.leaf = leafInorder
 
 
 function loInorder(n, x) {
-  while(!leafInorder(n,x)) {
-    x = leftInorder(n,x)
+  if(n <= 0) {
+    return 0
   }
-  return x
+  var r = rootInorder(n)
+  if(x > r) {
+    return loInorder(n-r-1, x-r-1) + r + 1
+  } else if(x === r) {
+    return 0
+  }
+  return loInorder(r, x)
 }
 exports.lo = loInorder
 
-
-function hasRight(n, x) {
-  var ptree = bits.nextPow2(n+1)>>>1
-  var f     = n - ptree + 1
-  var c     = f + bits.nextPow2(f) - 1
-  if(x < c-1) {
-    return bits.countTrailingZeros(~x)
-  } else if(x === 0) {
+function hiInorder(n, x) {
+  if(n <= 0) {
     return 0
   }
-  return bits.countTrailingZeros(~(x-f))
-}
-
-function hiInorder(n, x) {
-  while(hasRight(n, x) > 0) {
-    x = rightInorder(n, x)
+  var r = rootInorder(n)
+  if(x > r) {
+    return hiInorder(n-r-1, x-r-1) + r + 1
+  } else if(x === r) {
+    return n-1
   }
-  return x
+  return hiInorder(r, x)
 }
 exports.hi = hiInorder
