@@ -129,29 +129,42 @@ exports.leaf = leafInorder
 
 
 function loInorder(n, x) {
-  if(n <= 0) {
-    return 0
+  n |= 0
+  x |= 0
+  var l = 0
+  while(n > 1) {
+    var r = rootInorder(n)
+    if(x > r) {
+      l += r + 1
+      n -= r + 1
+      x -= r + 1
+    } else if(x === r) {
+      break
+    } else {
+      n = r
+    }
   }
-  var r = rootInorder(n)
-  if(x > r) {
-    return loInorder(n-r-1, x-r-1) + r + 1
-  } else if(x === r) {
-    return 0
-  }
-  return loInorder(r, x)
+  return l
 }
 exports.lo = loInorder
 
 function hiInorder(n, x) {
-  if(n <= 0) {
-    return 0
+  n |= 0
+  x |= 0
+  var l = 0
+  while(n > 1) {
+    var r = rootInorder(n)
+    if(x > r) {
+      l += r + 1
+      n -= r + 1
+      x -= r + 1
+    } else if(x === r) {
+      l += n-1
+      break
+    } else {
+      n = r
+    }
   }
-  var r = rootInorder(n)
-  if(x > r) {
-    return hiInorder(n-r-1, x-r-1) + r + 1
-  } else if(x === r) {
-    return n-1
-  }
-  return hiInorder(r, x)
+  return l
 }
 exports.hi = hiInorder
