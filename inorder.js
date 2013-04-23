@@ -18,7 +18,7 @@ function beginInorder(n) {
 exports.begin = beginInorder
 
 function endInorder(n) {
-  return n
+  return n-1
 }
 exports.end = endInorder
 
@@ -44,12 +44,12 @@ function heightInorder(n, x) {
 exports.height = heightInorder
 
 function prevInorder(n, x) {
-  return x-1
+  return Math.max(x-1,0)
 }
 exports.prev = prevInorder
 
 function nextInorder(n, x) {
-  return x+1
+  return Math.min(x+1,n-1)
 }
 exports.next = nextInorder
 
